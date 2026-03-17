@@ -1,0 +1,45 @@
+<!-- Ad Card Partial: _ad_card.html -->
+<div class="ad-card {% if ad.duration_days == 7 %}ad-card-featured{% endif %}">
+  {% if ad.duration_days == 7 %}
+    <div class="ad-badge ad-badge-featured">⭐ Featured</div>
+  {% elif ad.duration_days == 3 %}
+    <div class="ad-badge ad-badge-pro">Pro</div>
+  {% else %}
+    <div class="ad-badge ad-badge-basic">Basic</div>
+  {% endif %}
+
+  <div class="ad-img-wrap">
+    <img
+      src="{{ ad.image_url or 'https://picsum.photos/seed/' ~ ad._id|string ~ '/800/450' }}"
+      alt="{{ ad.title }}"
+      class="ad-img"
+      loading="lazy"
+      onerror="this.src='https://picsum.photos/seed/fallback/800/450'"
+    />
+    <div class="ad-cat-tag">{{ ad.category }}</div>
+  </div>
+
+  <div class="ad-body">
+    <h3 class="ad-title">{{ ad.title }}</h3>
+    <p class="ad-desc">{{ ad.description[:120] }}{% if ad.description|length > 120 %}…{% endif %}</p>
+
+    <div class="ad-meta">
+      <span class="ad-views">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        {{ ad.views }} views
+      </span>
+      <span class="ad-expiry" data-expiry="{{ ad.expiry_date.isoformat() }}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+        <span class="expiry-label">Loading…</span>
+      </span>
+    </div>
+
+    <a href="{{ url_for('visit_ad', ad_id=ad._id) }}"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="btn btn-visit">
+      Visit Ad
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    </a>
+  </div>
+</div>

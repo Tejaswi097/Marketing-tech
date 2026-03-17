@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block title %}AdVance – Promote Your Ads, Reach More People{% endblock %}
+
+{% block content %}
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
+    <div class="hero-grid"></div>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      {{ total_ads }} Active Promotions Live Now
+    </div>
+    <h1 class="hero-headline">
+      Promote Your Ads<br/>
+      <span class="headline-accent">Reach More People</span>
+    </h1>
+    <p class="hero-sub">
+      The smartest platform to amplify your message. Post once, drive traffic
+      to your links, and watch your audience grow — starting today.
+    </p>
+    <div class="hero-actions">
+      <a href="{{ url_for('post_ad') }}" class="btn btn-primary btn-lg">
+        <span>Start Promotion</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="{{ url_for('ads_page') }}" class="btn btn-ghost btn-lg">Browse All Ads</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">{{ total_ads }}+</span><span class="stat-label">Active Ads</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><span class="stat-num">8</span><span class="stat-label">Categories</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><span class="stat-num">3</span><span class="stat-label">Plan Tiers</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Categories ── -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Browse by Category</h2>
+      <p class="section-sub">Find exactly what you're looking for</p>
+    </div>
+    <div class="categories-grid">
+      {% set cat_icons = {
+        'Education': '🎓', 'Apps': '📱', 'Services': '⚙️',
+        'Business': '💼', 'Health': '💚', 'Technology': '🔬',
+        'Entertainment': '🎬', 'Other': '✦'
+      } %}
+      {% for cat in categories %}
+      <a href="{{ url_for('ads_page', category=cat) }}" class="cat-card">
+        <span class="cat-icon">{{ cat_icons.get(cat, '✦') }}</span>
+        <span class="cat-name">{{ cat }}</span>
+        <span class="cat-count">{{ cat_counts.get(cat, 0) }} ads</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ── Featured Ads ── -->
+{% if featured %}
+<section class="section section-dark">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">⭐ Top Picks</div>
+      <h2 class="section-title">Featured Ads</h2>
+      <p class="section-sub">Premium 7-day promotions with maximum visibility</p>
+    </div>
+    <div class="ads-grid ads-grid-featured">
+      {% for ad in featured %}
+        {% include "_ad_card.html" %}
+      {% endfor %}
+    </div>
+    <div class="section-footer">
+      <a href="{{ url_for('ads_page') }}" class="btn btn-outline">View All Ads →</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ── Trending Ads ── -->
+{% if trending %}
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">🔥 Most Viewed</div>
+      <h2 class="section-title">Trending Right Now</h2>
+      <p class="section-sub">Ads people are clicking on the most</p>
+    </div>
+    <div class="ads-grid">
+      {% for ad in trending %}
+        {% include "_ad_card.html" %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ── How It Works ── -->
+<section class="section section-cta">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">How It Works</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <h3>Create Your Ad</h3>
+        <p>Fill in your title, description, category, and the external link you want to promote.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <h3>Choose Duration</h3>
+        <p>Pick a 1-day, 3-day, or 7-day promotion window. Longer runs get featured placement.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <h3>Go Live & Track</h3>
+        <p>Your ad goes live instantly. Watch views grow and drive real traffic to your link.</p>
+      </div>
+    </div>
+    <div class="cta-banner">
+      <h3>Ready to get started?</h3>
+      <a href="{{ url_for('post_ad') }}" class="btn btn-primary btn-lg">Post Your Ad Now →</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

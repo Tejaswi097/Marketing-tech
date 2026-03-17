@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block title %}Post Ad – AdVance{% endblock %}
+
+{% block content %}
+
+<section class="page-header">
+  <div class="container">
+    <h1 class="page-title">Post Your Ad</h1>
+    <p class="page-sub">Fill in the details below to start promoting</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container container-narrow">
+
+    <!-- Duration Picker (shown above form for UX clarity) -->
+    <div class="duration-picker" id="durationPicker">
+      <h3 class="duration-title">Choose Promotion Duration</h3>
+      <div class="duration-options">
+
+        <label class="duration-card" for="dur1">
+          <input type="radio" name="duration_days" id="dur1" value="1" form="adForm"/>
+          <div class="duration-inner">
+            <span class="dur-days">1 Day</span>
+            <span class="dur-label">Starter</span>
+            <span class="dur-desc">Quick boost for time-sensitive promotions</span>
+            <span class="dur-badge basic">Basic</span>
+          </div>
+        </label>
+
+        <label class="duration-card" for="dur3">
+          <input type="radio" name="duration_days" id="dur3" value="3" form="adForm"/>
+          <div class="duration-inner">
+            <span class="dur-days">3 Days</span>
+            <span class="dur-label">Popular</span>
+            <span class="dur-desc">Extended reach with more impressions</span>
+            <span class="dur-badge pro">Pro</span>
+          </div>
+        </label>
+
+        <label class="duration-card duration-card-featured" for="dur7">
+          <input type="radio" name="duration_days" id="dur7" value="7" form="adForm" checked/>
+          <div class="duration-inner">
+            <span class="dur-days">7 Days</span>
+            <span class="dur-label">Best Value</span>
+            <span class="dur-desc">Maximum visibility + ⭐ Featured placement</span>
+            <span class="dur-badge featured">Featured</span>
+          </div>
+          <div class="duration-popular-tag">Most Popular</div>
+        </label>
+
+      </div>
+    </div>
+
+    <!-- Ad Form -->
+    <form id="adForm" class="ad-form" method="POST" action="{{ url_for('post_ad') }}" enctype="multipart/form-data">
+
+      <div class="form-group">
+        <label for="title" class="form-label">Ad Title <span class="required">*</span></label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          class="form-control"
+          placeholder="e.g. Learn Python in 30 Days"
+          maxlength="100"
+          required
+        />
+        <span class="form-hint">Make it catchy and descriptive (max 100 chars)</span>
+      </div>
+
+      <div class="form-group">
+        <label for="description" class="form-label">Description <span class="required">*</span></label>
+        <textarea
+          id="description"
+          name="description"
+          class="form-control"
+          rows="4"
+          placeholder="Describe your offering in detail. What will people find when they click your link?"
+          maxlength="500"
+          required
+        ></textarea>
+        <span class="form-hint">Max 500 characters</span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="category" class="form-label">Category <span class="required">*</span></label>
+          <select id="category" name="category" class="form-control" required>
+            {% for cat in categories %}
+              <option value="{{ cat }}">{{ cat }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="external_link" class="form-label">External Link <span class="required">*</span></label>
+          <input
+            type="url"
+            id="external_link"
+            name="external_link"
+            class="form-control"
+            placeholder="https://yoursite.com/page"
+            required
+          />
+          <span class="form-hint">The URL users will be redirected to</span>
+        </div>
+      </div>
+
+      <!-- Image Section -->
+      <div class="form-group">
+        <label class="form-label">Ad Image</label>
+        <div class="image-section">
+          <div class="image-option">
+            <label class="form-label-sm">Upload a file</label>
+            <input type="file" name="image_file" class="form-control-file" accept="image/*" id="imageFile"/>
+          </div>
+          <div class="image-divider"><span>or</span></div>
+          <div class="image-option">
+            <label class="form-label-sm">Paste an image URL</label>
+            <input type="url" name="image_url" class="form-control" placeholder="https://example.com/image.jpg" id="imageUrl"/>
+          </div>
+        </div>
+        <div class="img-preview-wrap" id="imgPreview" style="display:none">
+          <img id="imgPreviewEl" src="" alt="Preview"/>
+          <button type="button" class="clear-img" onclick="clearImage()">✕ Remove</button>
+        </div>
+      </div>
+
+      <div class="form-submit">
+        <button type="submit" class="btn btn-primary btn-lg btn-block">
+          <span>🚀 Launch My Ad</span>
+        </button>
+        <p class="form-disclaimer">Your ad will go live immediately after submission.</p>
+      </div>
+
+    </form>
+  </div>
+</section>
+
+<script>
+// Live image preview
+document.getElementById('imageFile').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => showPreview(ev.target.result);
+  reader.readAsDataURL(file);
+});
+
+document.getElementById('imageUrl').addEventListener('blur', function() {
+  if (this.value) showPreview(this.value);
+});
+
+function showPreview(src) {
+  document.getElementById('imgPreviewEl').src = src;
+  document.getElementById('imgPreview').style.display = 'flex';
+}
+
+function clearImage() {
+  document.getElementById('imageFile').value = '';
+  document.getElementById('imageUrl').value = '';
+  document.getElementById('imgPreview').style.display = 'none';
+}
+
+// Highlight selected duration card
+document.querySelectorAll('.duration-card input').forEach(radio => {
+  radio.addEventListener('change', () => {
+    document.querySelectorAll('.duration-card').forEach(c => c.classList.remove('selected'));
+    if (radio.checked) radio.closest('.duration-card').classList.add('selected');
+  });
+  if (radio.checked) radio.closest('.duration-card').classList.add('selected');
+});
+</script>
+
+{% endblock %}
