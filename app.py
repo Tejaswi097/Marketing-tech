@@ -4,7 +4,7 @@ Connects to MongoDB Atlas using PyMongo
 """
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import os
 import uuid
 from dotenv import load_dotenv
@@ -30,7 +30,7 @@ except ImportError:
         def __hash__(self): return hash(self._id)
 
 app = Flask(__name__)
-app.secret_key = "ad_platform_secret_key_change_in_production"
+app.secret_key = os.environ.get("SECRET_KEY", "ad_platform_fallback_secret_key_123")
 
 # ─── MongoDB Atlas Connection ─────────────────────────────────────────────────
 # Replace this URI with your MongoDB Atlas connection string in a .env file
@@ -65,7 +65,7 @@ except Exception as e:
 MOCK_ADS = []
 
 def get_now():
-    return datetime.utcnow()
+    return datetime.now(timezone.utc)
 
 def use_mock():
     return ads_col is None
@@ -443,6 +443,9 @@ if __name__ == "__main__":
     def ensure_session():
         if "user_id" not in session:
             session["user_id"] = "guest_user"
+
+    # Ensure uploads directory exists
+    os.makedirs(os.path.join(app.root_path, "static", "uploads"), exist_ok=True)
 
     seed_demo_data()
     print("Starting AdVance Platform on http://127.0.0.1:5000")

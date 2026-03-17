@@ -10,9 +10,9 @@ pip install -r requirements.txt
 ```
 
 ### 2. Set your MongoDB Atlas URI
-Edit `app.py` and replace the `MONGO_URI` string with your real Atlas connection string:
-```python
-MONGO_URI = "mongodb+srv://<user>:<password>@cluster0.mongodb.net/?retryWrites=true&w=majority"
+Create a `.env` file in the root directory and add your connection string:
+```bash
+MONGO_URI="mongodb+srv://<username>:<password>@cluster0.mongodb.net/"
 ```
 Or set it as an environment variable:
 ```bash
